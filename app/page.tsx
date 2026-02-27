@@ -8,13 +8,14 @@ import {
   Share2,
   Camera,
   ArrowRight,
+  Shield,
 } from "lucide-react";
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen">
       <header className="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-white/5">
-        <div className="max-w-[1600px] mx-auto px-12 h-24 flex items-center justify-between">
+        <div className="max-w-[1600px] mx-auto px-12 h-20 flex items-center justify-between">
           <div className="flex items-center gap-20">
             <Link href="/" className="flex items-center gap-3 group">
               <Sparkles className="text-[#4A0001] w-5 h-5 font-thin group-hover:rotate-180 transition-transform duration-1000" />
@@ -30,16 +31,16 @@ export default function LandingPage() {
                 Início
               </Link>
               <Link
-                href="/admin"
+                href="#"
                 className="text-white/40 hover:text-white text-[10px] font-light tracking-[0.3em] uppercase transition-all duration-500"
               >
-                Admin
+                Categorias
               </Link>
               <Link
-                href="/reader"
+                href="#"
                 className="text-white/40 hover:text-white text-[10px] font-light tracking-[0.3em] uppercase transition-all duration-500"
               >
-                Leitor
+                Destaques
               </Link>
               <Link
                 href="#"
@@ -59,6 +60,13 @@ export default function LandingPage() {
               />
             </div>
             <div className="flex items-center gap-10">
+              <Link
+                href="/admin"
+                className="text-white/20 hover:text-white transition-colors duration-500"
+                title="Admin Dashboard"
+              >
+                <Shield className="w-4 h-4 font-light" />
+              </Link>
               <button className="text-white/40 font-light text-[10px] tracking-[0.3em] hover:text-white transition-colors duration-500">
                 LOGIN
               </button>
@@ -80,39 +88,6 @@ export default function LandingPage() {
               priority
               referrerPolicy="no-referrer"
             />
-          </div>
-          <div className="absolute bottom-16 left-12 z-30 flex items-center gap-10">
-            <div className="w-24 h-[1px] bg-white/10 relative overflow-hidden">
-              <div className="absolute inset-0 bg-[#4A0001]/40 -translate-x-full"></div>
-            </div>
-            <span className="text-[9px] tracking-[0.6em] text-white/30 uppercase">
-              Curadoria Editorial . 2024
-            </span>
-          </div>
-          <div className="relative z-20 max-w-[1600px] mx-auto px-12 w-full mt-24">
-            <div className="max-w-4xl space-y-16">
-              <div className="flex items-center gap-6 text-white/30 font-light tracking-[0.6em] uppercase text-[8px]">
-                <span className="w-12 h-[0.5px] bg-white/10"></span>
-                Coleção Prestige
-              </div>
-              <h2 className="serif-heading text-white text-8xl md:text-9xl lg:text-[11rem] font-black leading-[0.85]">
-                Sublime <br />{" "}
-                <span className="text-white/80 italic font-light">Desejo.</span>
-              </h2>
-              <p className="text-white/40 text-lg md:text-xl font-extralight leading-relaxed max-w-lg tracking-wider">
-                Uma imersão literária onde a estética do proibido encontra a
-                elegância da palavra. Descubra narrativas que transcendem o
-                comum.
-              </p>
-              <div className="flex items-center gap-12 pt-8">
-                <button className="velvet-button px-16 py-6 text-[11px]">
-                  Explorar Catálogo
-                </button>
-                <button className="text-white/30 hover:text-white text-[9px] tracking-[0.4em] font-light transition-all duration-500 border-b border-transparent hover:border-white/10 pb-2 uppercase">
-                  Conhecer a Marca
-                </button>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -179,7 +154,7 @@ export default function LandingPage() {
                 img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAUQAgWw1ED_wBza_os2-48hs98YDfqGRxroWsnw_sXq7k5R7oltoBV-auZ9m0-eJxcZ8EWMRo7SwYwTmtB1aJCq0uJP1fwYHFLIZFkBdPLXcBAFhoQoBcFNl25DhBwaUHxQx9CSGH5gFUMFPnSH-c5Aa4u66so0-Z36IXXP3qz1Ny3aUMci3qkKxD7M7K9FdJDSiC6O6-j8yZpOy9W1JwvBhu5FCfS32mAiJS8wbDw4Qcnc3ENxii2O_SKrQCcLlQcLYMBzoypS0Y",
               },
             ].map((book, i) => (
-              <div key={i} className="group cursor-pointer space-y-10">
+              <Link href="/book" key={i} className="group cursor-pointer space-y-10 block">
                 <div className="relative aspect-[3/4] overflow-hidden bg-zinc-950 thin-border transition-all duration-1000">
                   <Image
                     alt={`${book.title} cover`}
@@ -201,7 +176,7 @@ export default function LandingPage() {
                     {book.author}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </section>

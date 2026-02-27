@@ -1,26 +1,134 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
   Menu,
   ZoomOut,
   ZoomIn,
-  Download,
-  Printer,
-  Edit2,
-  Share2,
   ChevronsLeft,
   ChevronLeft,
   ChevronRight,
   ChevronsRight,
+  Maximize,
+  Minimize,
 } from "lucide-react";
 
 export default function ReaderPage() {
+  // Use a mock book ID for this example
+  const bookId = "the-midnight-rendezvous";
+
+  const [zoomLevel, setZoomLevel] = useState(() => {
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem(`erotixxxs_reader_${bookId}`);
+      if (savedState) {
+        try {
+          const { zoom } = JSON.parse(savedState);
+          if (zoom && typeof zoom === "number") return zoom;
+        } catch (e) {
+          console.error("Failed to parse saved reader state", e);
+        }
+      }
+    }
+    return 100;
+  });
+
+  const [currentPage, setCurrentPage] = useState(() => {
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem(`erotixxxs_reader_${bookId}`);
+      if (savedState) {
+        try {
+          const { page } = JSON.parse(savedState);
+          if (page && typeof page === "number") return page;
+        } catch (e) {
+          console.error("Failed to parse saved reader state", e);
+        }
+      }
+    }
+    return 12;
+  });
+
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const totalPages = 156;
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // Save state whenever it changes
+  useEffect(() => {
+    localStorage.setItem(
+      `erotixxxs_reader_${bookId}`,
+      JSON.stringify({ page: currentPage, zoom: zoomLevel })
+    );
+  }, [currentPage, zoomLevel, bookId]);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        setCurrentPage((prev) => {
+          const next = Math.min(prev + 1, totalPages);
+          if (next !== prev && contentRef.current) contentRef.current.scrollTop = 0;
+          return next;
+        });
+      } else if (e.key === "ArrowLeft") {
+        setCurrentPage((prev) => {
+          const next = Math.max(prev - 1, 1);
+          if (next !== prev && contentRef.current) contentRef.current.scrollTop = 0;
+          return next;
+        });
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.log(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
+
+  const handleZoomIn = () => setZoomLevel((prev) => Math.min(prev + 10, 200));
+  const handleZoomOut = () => setZoomLevel((prev) => Math.max(prev - 10, 50));
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    if (contentRef.current) contentRef.current.scrollTop = 0;
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+    if (contentRef.current) contentRef.current.scrollTop = 0;
+  };
+  const handleFirstPage = () => {
+    setCurrentPage(1);
+    if (contentRef.current) contentRef.current.scrollTop = 0;
+  };
+  const handleLastPage = () => {
+    setCurrentPage(totalPages);
+    if (contentRef.current) contentRef.current.scrollTop = 0;
+  };
+
+  const progressPercentage = Math.round((currentPage / totalPages) * 100);
+
   return (
     <div className="bg-[#0a0505] font-[family-name:var(--font-jakarta)] text-white/90 antialiased overflow-hidden h-screen flex flex-col">
-      <header className="h-14 border-b border-white/5 bg-[#0a0505] flex items-center justify-between px-6 z-50">
-        <div className="flex items-center gap-6">
+      {!isFullscreen && (
+        <header className="h-14 border-b border-white/5 bg-[#0a0505] flex items-center justify-between px-6 z-50">
+          <div className="flex items-center gap-6">
           <label
             className="cursor-pointer p-2 hover:bg-white/5 rounded-lg transition-colors flex items-center gap-2"
             htmlFor="toc-toggle"
@@ -46,28 +154,29 @@ export default function ReaderPage() {
 
         <div className="flex items-center gap-4">
           <div className="flex items-center bg-white/5 rounded-full px-2 py-1">
-            <button className="p-1.5 hover:text-[#8b1a1a] transition-colors">
+            <button
+              onClick={handleZoomOut}
+              className="p-1.5 hover:text-[#8b1a1a] transition-colors"
+            >
               <ZoomOut className="w-5 h-5" />
             </button>
             <span className="text-[11px] font-bold px-3 text-white/60 min-w-[50px] text-center">
-              100%
+              {zoomLevel}%
             </span>
-            <button className="p-1.5 hover:text-[#8b1a1a] transition-colors">
+            <button
+              onClick={handleZoomIn}
+              className="p-1.5 hover:text-[#8b1a1a] transition-colors"
+            >
               <ZoomIn className="w-5 h-5" />
             </button>
           </div>
           <div className="h-4 w-[1px] bg-white/10 mx-2"></div>
           <button
+            onClick={toggleFullscreen}
             className="p-2 hover:bg-white/5 rounded-lg text-white/60"
-            title="Download PDF"
+            title="Tela Cheia"
           >
-            <Download className="w-5 h-5" />
-          </button>
-          <button
-            className="p-2 hover:bg-white/5 rounded-lg text-white/60"
-            title="Print"
-          >
-            <Printer className="w-5 h-5" />
+            <Maximize className="w-5 h-5" />
           </button>
           <div className="w-8 h-8 rounded-full border border-[#8b1a1a]/40 ml-2 relative overflow-hidden">
             <Image
@@ -80,6 +189,7 @@ export default function ReaderPage() {
           </div>
         </div>
       </header>
+    )}
 
       <div className="flex-1 flex overflow-hidden relative">
         <input className="hidden peer" id="toc-toggle" type="checkbox" />
@@ -153,8 +263,14 @@ export default function ReaderPage() {
           </nav>
         </aside>
 
-        <main className="flex-1 bg-[#0a0505] overflow-y-auto custom-scrollbar relative z-10 scroll-smooth">
-          <div className="max-w-[850px] mx-auto py-12 px-8 flex flex-col gap-12">
+        <main
+          ref={contentRef}
+          className="flex-1 bg-[#0a0505] overflow-y-auto custom-scrollbar relative z-10 scroll-smooth"
+        >
+          <div
+            className="max-w-[850px] mx-auto py-12 px-8 flex flex-col gap-12 origin-top transition-transform duration-300"
+            style={{ transform: `scale(${zoomLevel / 100})` }}
+          >
             <section className="bg-white text-black min-h-[1100px] w-full p-16 md:p-24 flex flex-col items-center shadow-[0_0_50px_rgba(0,0,0,0.5)]">
               <div className="w-full text-center border-b border-black/10 pb-12 mb-16">
                 <span className="text-[10px] uppercase tracking-[0.4em] text-black/40 font-bold mb-4 block">
@@ -222,59 +338,62 @@ export default function ReaderPage() {
               </div>
 
               <div className="mt-auto pt-16 w-full flex justify-between items-center text-[10px] uppercase tracking-widest text-black/30 font-bold border-t border-black/5">
-                <span>Página 12</span>
+                <span>Página {currentPage}</span>
                 <span>EROTIXXXS</span>
                 <span>2024</span>
               </div>
             </section>
 
-            <section className="bg-white text-black min-h-[1100px] w-full p-16 md:p-24 opacity-40 hover:opacity-100 transition-opacity flex flex-col items-center shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-              <div className="font-[family-name:var(--font-crimson)] text-[1.2rem] leading-[1.8] text-black/90 space-y-8 max-w-[600px] w-full pt-12">
-                <p>
-                  &quot;Temos regras para esta noite,&quot; ela sussurrou, seus
-                  olhos buscando os dele. &quot;Regras que não podem ser
-                  quebradas sob nenhuma circunstância.&quot;
-                </p>
-                <p>
-                  Julian sorriu, uma inclinação lenta e perigosa dos lábios.
-                  &quot;Regras foram feitas para serem testadas. Mas por você?
-                  Eu poderia considerar segui-las. Por um tempo.&quot;
-                </p>
-                <p>
-                  O silêncio que se seguiu foi pesado com o que não foi dito.
-                  Ela estendeu a mão, seus dedos roçando levemente a gola de sua
-                  camisa, uma carícia que era tanto um desafio quanto um
-                  convite.
-                </p>
-              </div>
+            {currentPage < totalPages && (
+              <section className="bg-white text-black min-h-[1100px] w-full p-16 md:p-24 opacity-40 hover:opacity-100 transition-opacity flex flex-col items-center shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                <div className="font-[family-name:var(--font-crimson)] text-[1.2rem] leading-[1.8] text-black/90 space-y-8 max-w-[600px] w-full pt-12">
+                  <p>
+                    &quot;Temos regras para esta noite,&quot; ela sussurrou, seus
+                    olhos buscando os dele. &quot;Regras que não podem ser
+                    quebradas sob nenhuma circunstância.&quot;
+                  </p>
+                  <p>
+                    Julian sorriu, uma inclinação lenta e perigosa dos lábios.
+                    &quot;Regras foram feitas para serem testadas. Mas por você?
+                    Eu poderia considerar segui-las. Por um tempo.&quot;
+                  </p>
+                  <p>
+                    O silêncio que se seguiu foi pesado com o que não foi dito.
+                    Ela estendeu a mão, seus dedos roçando levemente a gola de sua
+                    camisa, uma carícia que era tanto um desafio quanto um
+                    convite.
+                  </p>
+                </div>
 
-              <div className="mt-auto pt-16 w-full flex justify-between items-center text-[10px] uppercase tracking-widest text-black/30 font-bold border-t border-black/5">
-                <span>Página 13</span>
-                <span>EROTIXXXS</span>
-                <span>2024</span>
-              </div>
-            </section>
+                <div className="mt-auto pt-16 w-full flex justify-between items-center text-[10px] uppercase tracking-widest text-black/30 font-bold border-t border-black/5">
+                  <span>Página {currentPage + 1}</span>
+                  <span>EROTIXXXS</span>
+                  <span>2024</span>
+                </div>
+              </section>
+            )}
           </div>
         </main>
 
-        <div className="fixed right-8 bottom-24 flex flex-col gap-2 z-30">
-          <button className="w-12 h-12 rounded-full bg-[#8b1a1a] text-white shadow-xl flex items-center justify-center hover:scale-110 transition-transform">
-            <Edit2 className="w-5 h-5" />
-          </button>
-          <button className="w-12 h-12 rounded-full bg-[#140a0a] border border-white/10 text-white/60 shadow-xl flex items-center justify-center hover:text-white transition-colors">
-            <Share2 className="w-5 h-5" />
-          </button>
-        </div>
       </div>
 
-      <footer className="h-14 border-t border-white/5 bg-[#0a0505]/95 backdrop-blur-md z-50 flex items-center px-6">
+      {!isFullscreen && (
+        <footer className="h-14 border-t border-white/5 bg-[#0a0505]/95 backdrop-blur-md z-50 flex items-center px-6">
         <div className="flex items-center gap-4 min-w-[150px]">
-          <button className="p-1.5 text-white/40 hover:text-white transition-colors">
+          <button
+            onClick={handleFirstPage}
+            disabled={currentPage === 1}
+            className="p-1.5 text-white/40 hover:text-white transition-colors disabled:opacity-30 disabled:hover:text-white/40"
+          >
             <ChevronsLeft className="w-5 h-5" />
           </button>
-          <button className="flex items-center gap-2 group">
-            <ChevronLeft className="w-5 h-5 text-white/40 group-hover:text-[#8b1a1a] transition-colors" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 group-hover:text-white">
+          <button
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+            className="flex items-center gap-2 group disabled:opacity-30"
+          >
+            <ChevronLeft className="w-5 h-5 text-white/40 group-hover:text-[#8b1a1a] transition-colors group-disabled:group-hover:text-white/40" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 group-hover:text-white group-disabled:group-hover:text-white/40">
               Página Anterior
             </span>
           </button>
@@ -286,29 +405,48 @@ export default function ReaderPage() {
               Progresso da Leitura
             </span>
             <span className="text-[9px] uppercase font-bold tracking-[0.2em] text-[#8b1a1a]">
-              12 de 156 páginas (8%)
+              {currentPage} de {totalPages} páginas ({progressPercentage}%)
             </span>
           </div>
           <div className="w-full max-w-2xl h-[3px] bg-white/5 rounded-full overflow-hidden relative">
             <div
               className="absolute h-full bg-[#8b1a1a] shadow-[0_0_8px_rgba(139,26,26,0.6)] rounded-full transition-all duration-500"
-              style={{ width: "8.5%" }}
+              style={{ width: `${progressPercentage}%` }}
             ></div>
           </div>
         </div>
 
         <div className="flex items-center gap-4 min-w-[150px] justify-end">
-          <button className="flex items-center gap-2 group">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 group-hover:text-white">
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className="flex items-center gap-2 group disabled:opacity-30"
+          >
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 group-hover:text-white group-disabled:group-hover:text-white/40">
               Próxima Página
             </span>
-            <ChevronRight className="w-5 h-5 text-white/40 group-hover:text-[#8b1a1a] transition-colors" />
+            <ChevronRight className="w-5 h-5 text-white/40 group-hover:text-[#8b1a1a] transition-colors group-disabled:group-hover:text-white/40" />
           </button>
-          <button className="p-1.5 text-white/40 hover:text-white transition-colors">
+          <button
+            onClick={handleLastPage}
+            disabled={currentPage === totalPages}
+            className="p-1.5 text-white/40 hover:text-white transition-colors disabled:opacity-30 disabled:hover:text-white/40"
+          >
             <ChevronsRight className="w-5 h-5" />
           </button>
         </div>
       </footer>
+      )}
+
+      {isFullscreen && (
+        <button
+          onClick={toggleFullscreen}
+          className="fixed top-6 right-6 z-[100] p-3 bg-black/50 hover:bg-black/80 rounded-full text-white/60 hover:text-white backdrop-blur-md transition-all shadow-2xl border border-white/10"
+          title="Sair da Tela Cheia"
+        >
+          <Minimize className="w-5 h-5" />
+        </button>
+      )}
 
       <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)] z-20"></div>
     </div>
