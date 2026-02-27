@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import {
   Sparkles,
   Search,
@@ -12,6 +15,62 @@ import {
 } from "lucide-react";
 
 export default function LandingPage() {
+  const [activeCategory, setActiveCategory] = useState("Tudo");
+
+  const allBooks = [
+    {
+      title: "Sedução à Meia-Noite",
+      author: "Elena Valmont",
+      category: "Dark Romance",
+      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBNtWZo2PqmSHKPyX9tqNhYsYjs3qznORXtMg0vcBy4kEcl3LUdipPN9rHLGE2S4fkPYNyFKjSs_t5G6RfCouiM3gwdTpBiu68LL0QQ2UPimvCd8X0qaW4V8Lae6Nc-k8c1XWc_z3OmWaZnJtPhH-EbN3AO1MVJPuekpkND9GoHABWRrOLZcDaoZqgnUuKTz2MOGC5FGQH3OANR9DEsw6h541_LrQWYxz0m-N0OG-LdetVBpXocgxRjjfFwr-68yRohqznDJkFU6t0",
+    },
+    {
+      title: "Sombras do Desejo",
+      author: "Lucas Thorne",
+      category: "Dark Romance",
+      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAoTBomir29GOq6xLTICSwIruabo4r1aQdLHjl8M-0JzRwWBCQlrYuD5DIknj1dDjyevP2nZklC0doSxk82PJnWB2cau5BYZiLuEfliuZXuPx_mbP4-q8mYC0PMIiTiDRXnbk3Q2pMZusFxqR2fZVLkZev4vjs67Tsy3RvmRPiigK5ehMrJ6PcBgv74os46KS_ps--jo1F_g1vx-nHtONsV7W-CdELSq-DfX4QnX8_ySIBKSFLiAic-6JjQJ49WFqWcvppRilAtg4w",
+    },
+    {
+      title: "O Pacto",
+      author: "Sofia Blackwood",
+      category: "Contos Eróticos",
+      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCkQcFB-2zWXpdM7rgp2VRCyV3QPrZbsL57mq-aRtMCGv7g4ElRaJwD-sGvf0sWoRa_sNgdHKKEp-DS8oFQfD6naotODD-Fjn3wrzvSjuUigwXeu97nlrWI0nuuf55edgoIOpqJt7MOjgxQGdhZivr0tP_DswgFBZOkX98I2BIH_zyVgzfvO1B2xI0f0G13dJgMavb0XyMEWfNDAE1PgiooE3sP5_3F4tkT-DBmmVS-KeV_8kwhDkEBFXAUQu2b7m6Yj3ypzgeg_QI",
+    },
+    {
+      title: "Encontros Proibidos",
+      author: "Marcus Volkov",
+      category: "Contos Eróticos",
+      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAUQAgWw1ED_wBza_os2-48hs98YDfqGRxroWsnw_sXq7k5R7oltoBV-auZ9m0-eJxcZ8EWMRo7SwYwTmtB1aJCq0uJP1fwYHFLIZFkBdPLXcBAFhoQoBcFNl25DhBwaUHxQx9CSGH5gFUMFPnSH-c5Aa4u66so0-Z36IXXP3qz1Ny3aUMci3qkKxD7M7K9FdJDSiC6O6-j8yZpOy9W1JwvBhu5FCfS32mAiJS8wbDw4Qcnc3ENxii2O_SKrQCcLlQcLYMBzoypS0Y",
+    },
+    {
+      title: "Versos da Carne",
+      author: "Isabella Noir",
+      category: "Poesia Erótica",
+      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBgVtrm_eOHx_p2qd974xlkVGN1K7_isbTMlnq5NkFJFiupjuDVKDc8BCZH2kcnb_G533aE_i37g7z0GEROO7QNUdup3fzsS1G676zvnl4N3SCdIgz9rDiq2ffcvObWtyAZ_laJjB1dZyfvdKVWrhJwKL6l3ZakUICEeb-lP1-MocCpq1DqcaGJ-xB5JnWsNDbneY1XVODOME4EFFj-vEdUgzBUI0BHxz9ls1zV9DDjYW5p-Q8zgjxiFvabZGySiTjCSliarGdd0po",
+    },
+    {
+      title: "Pecados Noturnos",
+      author: "Marco Silva",
+      category: "Contos Eróticos",
+      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuA9I7Efp6C163sDemrrL15lCaeVbZ9GtFuyM0bpamc3_LAwosgsEr-t5w3rkK8jGjlfQuOcWtUDpcv_x1g_PTt-sf-y9LRo0ByOWuQ0IcNI7Kc0Mjnw2UkJuDHOxtD2tQ4pXewgn3mfH4z9g8muXmee6dJZCPkWPadbmp0M1LjHiEV7YO0GcijP4suM-TOAN_oKbyETk9-ZzHE2Hp7eds_46eFHEY1TK67Lp-S7h_R7qDhruuhbJTmZBXclob1Ygh26aJpvuSSPen4",
+    }
+  ];
+
+  const categories = ["Tudo", "Dark Romance", "Contos Eróticos", "Poesia Erótica"];
+
+  const filteredBooks = activeCategory === "Tudo" 
+    ? allBooks 
+    : allBooks.filter(book => book.category === activeCategory);
+
+  // Mock data for the featured book (this would come from the database/admin in the future)
+  const featuredBook = {
+    title: "Desejos Proibidos",
+    author: "Elena V. Blackwood",
+    description: "Em uma sociedade onde a repressão é a norma, Isabella descobre um clube secreto onde as fantasias mais obscuras ganham vida. Entre bailes de máscaras e encontros clandestinos, ela deve escolher entre a segurança de sua vida monótona e a perigosa atração de um estranho misterioso. Uma história de paixão avassaladora e segredos que podem destruir reputações.",
+    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB76PMeCOrsbrAM0v-Wta9vEyEObtaGpw082bEHn_vXL6KvaMD-CRq9tFEtntkXvv06H18UmRmOnjX47ssetYVxw7uXyYYJmJxYlz99Hl1Oe5chXFmn3X-wEMFRlY7Cf95cFHPLz7sUAuP-JNG0TTuLDb8EnqjBrkj6-pU8bOinJ98gJ32QIIwv-tQMz7vQity831RrCmCcqRN1CdFFTgcElcqbZRLXGaJXktMrzDFrAg8EQlLv8jZOy7IL_bzv6GF87kT8spNV_oY",
+    category: "Romance Erótico"
+  };
+
   return (
     <div className="min-h-screen">
       <header className="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-white/5">
@@ -76,8 +135,8 @@ export default function LandingPage() {
         </div>
       </header>
 
-      <main>
-        <section className="relative h-screen w-full flex items-center overflow-hidden bg-black">
+      <main className="pt-20">
+        <section className="relative h-[calc(100vh-5rem)] w-full flex items-center overflow-hidden bg-black">
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 hero-gradient z-10"></div>
             <Image
@@ -91,69 +150,30 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="py-20 border-b border-white/5">
-          <div className="max-w-[1600px] mx-auto px-12">
-            <div className="flex overflow-x-auto gap-16 pb-2 no-scrollbar justify-center">
-              <button className="text-[#4A0001] text-[9px] font-semibold tracking-[0.4em] uppercase border-b border-[#4A0001]/20 pb-2">
-                Tudo
-              </button>
-              <button className="text-white/20 hover:text-white text-[9px] font-light tracking-[0.4em] uppercase transition-all duration-500 pb-2">
-                Romance Dark
-              </button>
-              <button className="text-white/20 hover:text-white text-[9px] font-light tracking-[0.4em] uppercase transition-all duration-500 pb-2">
-                BDSM Contemporâneo
-              </button>
-              <button className="text-white/20 hover:text-white text-[9px] font-light tracking-[0.4em] uppercase transition-all duration-500 pb-2">
-                Contos Proibidos
-              </button>
-              <button className="text-white/20 hover:text-white text-[9px] font-light tracking-[0.4em] uppercase transition-all duration-500 pb-2">
-                Fantasia Adulta
-              </button>
+        <section className="py-32 max-w-[1600px] mx-auto px-12">
+          <div className="flex flex-col items-center mb-24">
+            <h3 className="serif-heading text-6xl font-light italic text-white/90 mb-16">
+              Categorias
+            </h3>
+            <div className="flex flex-wrap gap-12 justify-center">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`text-[10px] font-semibold tracking-[0.4em] uppercase border-b pb-2 transition-all duration-500 ${
+                    activeCategory === cat
+                      ? "text-[#4A0001] border-[#4A0001]/40"
+                      : "text-white/20 border-transparent hover:text-white hover:border-white/20"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
             </div>
-          </div>
-        </section>
-
-        <section className="py-48 max-w-[1600px] mx-auto px-12">
-          <div className="flex items-end justify-between mb-32">
-            <div className="space-y-8">
-              <h3 className="serif-heading text-6xl font-light italic text-white/90">
-                Destaques da Estação
-              </h3>
-              <p className="text-white/20 text-[9px] tracking-[0.5em] uppercase font-extralight">
-                Uma seleção rigorosa de obras contemporâneas
-              </p>
-            </div>
-            <Link
-              href="#"
-              className="text-white/30 text-[9px] tracking-[0.4em] border-b border-white/5 hover:border-white/20 hover:text-white pb-2 transition-all duration-500 uppercase"
-            >
-              Ver Todas as Obras
-            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-20">
-            {[
-              {
-                title: "Sedução à Meia-Noite",
-                author: "Elena Valmont",
-                img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBNtWZo2PqmSHKPyX9tqNhYsYjs3qznORXtMg0vcBy4kEcl3LUdipPN9rHLGE2S4fkPYNyFKjSs_t5G6RfCouiM3gwdTpBiu68LL0QQ2UPimvCd8X0qaW4V8Lae6Nc-k8c1XWc_z3OmWaZnJtPhH-EbN3AO1MVJPuekpkND9GoHABWRrOLZcDaoZqgnUuKTz2MOGC5FGQH3OANR9DEsw6h541_LrQWYxz0m-N0OG-LdetVBpXocgxRjjfFwr-68yRohqznDJkFU6t0",
-              },
-              {
-                title: "Sombras do Desejo",
-                author: "Lucas Thorne",
-                img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAoTBomir29GOq6xLTICSwIruabo4r1aQdLHjl8M-0JzRwWBCQlrYuD5DIknj1dDjyevP2nZklC0doSxk82PJnWB2cau5BYZiLuEfliuZXuPx_mbP4-q8mYC0PMIiTiDRXnbk3Q2pMZusFxqR2fZVLkZev4vjs67Tsy3RvmRPiigK5ehMrJ6PcBgv74os46KS_ps--jo1F_g1vx-nHtONsV7W-CdELSq-DfX4QnX8_ySIBKSFLiAic-6JjQJ49WFqWcvppRilAtg4w",
-              },
-              {
-                title: "O Pacto",
-                author: "Sofia Blackwood",
-                img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCkQcFB-2zWXpdM7rgp2VRCyV3QPrZbsL57mq-aRtMCGv7g4ElRaJwD-sGvf0sWoRa_sNgdHKKEp-DS8oFQfD6naotODD-Fjn3wrzvSjuUigwXeu97nlrWI0nuuf55edgoIOpqJt7MOjgxQGdhZivr0tP_DswgFBZOkX98I2BIH_zyVgzfvO1B2xI0f0G13dJgMavb0XyMEWfNDAE1PgiooE3sP5_3F4tkT-DBmmVS-KeV_8kwhDkEBFXAUQu2b7m6Yj3ypzgeg_QI",
-              },
-              {
-                title: "Encontros Proibidos",
-                author: "Marcus Volkov",
-                img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAUQAgWw1ED_wBza_os2-48hs98YDfqGRxroWsnw_sXq7k5R7oltoBV-auZ9m0-eJxcZ8EWMRo7SwYwTmtB1aJCq0uJP1fwYHFLIZFkBdPLXcBAFhoQoBcFNl25DhBwaUHxQx9CSGH5gFUMFPnSH-c5Aa4u66so0-Z36IXXP3qz1Ny3aUMci3qkKxD7M7K9FdJDSiC6O6-j8yZpOy9W1JwvBhu5FCfS32mAiJS8wbDw4Qcnc3ENxii2O_SKrQCcLlQcLYMBzoypS0Y",
-              },
-            ].map((book, i) => (
+            {filteredBooks.map((book, i) => (
               <Link href="/book" key={i} className="group cursor-pointer space-y-10 block">
                 <div className="relative aspect-[3/4] overflow-hidden bg-zinc-950 thin-border transition-all duration-1000">
                   <Image
@@ -181,7 +201,66 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="max-w-[1600px] mx-auto px-12 mb-64">
+        <section className="py-32 bg-[#050303] border-y border-white/5">
+          <div className="max-w-[1600px] mx-auto px-12">
+            <div className="flex flex-col items-center mb-24">
+              <h3 className="serif-heading text-6xl font-light italic text-white/90">
+                Destaque
+              </h3>
+            </div>
+            
+            <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+              <Link href="/book" className="w-full lg:w-[450px] flex-shrink-0 group relative perspective-1000 block">
+                <div className="aspect-[2/3] w-full rounded-sm overflow-hidden border border-white/10 relative z-10 transition-transform duration-700 ease-out group-hover:scale-[1.02] shadow-[0_0_40px_rgba(0,0,0,0.8)]">
+                  <Image
+                    alt={`${featuredBook.title} cover`}
+                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700 grayscale-[20%] group-hover:grayscale-0"
+                    src={featuredBook.img}
+                    fill
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                </div>
+                <div className="absolute inset-0 bg-[#4A0001]/20 blur-[100px] -z-10 opacity-30 group-hover:opacity-60 transition-opacity duration-1000"></div>
+              </Link>
+              
+              <div className="flex flex-col flex-1 max-w-2xl">
+                <div className="flex flex-col gap-4 mb-10">
+                  <h4 className="text-[#4A0001] font-medium text-[10px] uppercase tracking-[0.3em] flex items-center gap-3">
+                    <span className="w-6 h-[0.5px] bg-[#4A0001] block"></span> {featuredBook.category}
+                  </h4>
+                  <h2 className="serif-heading text-5xl md:text-6xl text-white leading-[1.1] tracking-tight italic">
+                    {featuredBook.title}
+                  </h2>
+                  <p className="text-lg text-white/40 font-light tracking-wide uppercase text-[11px] mt-2">
+                    {featuredBook.author}
+                  </p>
+                </div>
+                
+                <div className="mb-12">
+                  <p className="text-white/60 text-lg leading-relaxed font-light tracking-wide text-justify">
+                    <span className="text-5xl float-left mr-3 mt-[-8px] text-[#4A0001] serif-heading">
+                      {featuredBook.description.charAt(0)}
+                    </span>
+                    {featuredBook.description.slice(1)}
+                  </p>
+                </div>
+                
+                <div className="flex items-center gap-8">
+                  <Link href="/book" className="velvet-button px-12 py-5 text-[10px]">
+                    Ver Detalhes
+                  </Link>
+                  <Link href="/reader" className="text-white/30 hover:text-white text-[10px] tracking-[0.3em] font-light transition-all duration-500 border-b border-transparent hover:border-white/10 pb-1 uppercase flex items-center gap-2 group">
+                    Ler Agora
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="max-w-[1600px] mx-auto px-12 mb-64 mt-32">
           <div className="relative border-y border-white/5 py-40 flex flex-col lg:flex-row items-center justify-between gap-24 overflow-hidden">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(74,0,1,0.05)_0%,transparent_70%)] -z-10"></div>
             <div className="space-y-10 max-w-3xl">
