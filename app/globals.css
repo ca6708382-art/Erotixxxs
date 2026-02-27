@@ -1,0 +1,48 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-serif), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-crimson: var(--font-crimson), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-jakarta: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer utilities {
+  .serif-heading { 
+    font-family: var(--font-serif); 
+    letter-spacing: -0.04em;
+  }
+  .glass-nav {
+    backdrop-filter: blur(25px);
+    background-color: rgba(5, 3, 3, 0.8);
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .thin-border {
+    border-width: 0.5px;
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+  .velvet-button {
+    @apply bg-[#4A0001] text-white/90 transition-all duration-700 hover:bg-[#3D0001] tracking-[0.3em] text-[10px] font-light uppercase px-12 py-4 rounded-sm;
+  }
+  .hero-gradient {
+    background: linear-gradient(to right, rgba(5,3,3,0.9) 0%, rgba(5,3,3,0.4) 50%, rgba(5,3,3,0) 100%);
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #2a1212;
+    border-radius: 10px;
+  }
+}
