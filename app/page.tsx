@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Sparkles,
   Search,
@@ -15,61 +15,88 @@ import {
 } from "lucide-react";
 
 export default function LandingPage() {
+  const [data, setData] = useState<any>(null);
   const [activeCategory, setActiveCategory] = useState("Tudo");
 
-  const allBooks = [
-    {
-      title: "Sedução à Meia-Noite",
-      author: "Elena Valmont",
-      category: "Dark Romance",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBNtWZo2PqmSHKPyX9tqNhYsYjs3qznORXtMg0vcBy4kEcl3LUdipPN9rHLGE2S4fkPYNyFKjSs_t5G6RfCouiM3gwdTpBiu68LL0QQ2UPimvCd8X0qaW4V8Lae6Nc-k8c1XWc_z3OmWaZnJtPhH-EbN3AO1MVJPuekpkND9GoHABWRrOLZcDaoZqgnUuKTz2MOGC5FGQH3OANR9DEsw6h541_LrQWYxz0m-N0OG-LdetVBpXocgxRjjfFwr-68yRohqznDJkFU6t0",
-    },
-    {
-      title: "Sombras do Desejo",
-      author: "Lucas Thorne",
-      category: "Dark Romance",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAoTBomir29GOq6xLTICSwIruabo4r1aQdLHjl8M-0JzRwWBCQlrYuD5DIknj1dDjyevP2nZklC0doSxk82PJnWB2cau5BYZiLuEfliuZXuPx_mbP4-q8mYC0PMIiTiDRXnbk3Q2pMZusFxqR2fZVLkZev4vjs67Tsy3RvmRPiigK5ehMrJ6PcBgv74os46KS_ps--jo1F_g1vx-nHtONsV7W-CdELSq-DfX4QnX8_ySIBKSFLiAic-6JjQJ49WFqWcvppRilAtg4w",
-    },
-    {
-      title: "O Pacto",
-      author: "Sofia Blackwood",
-      category: "Contos Eróticos",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCkQcFB-2zWXpdM7rgp2VRCyV3QPrZbsL57mq-aRtMCGv7g4ElRaJwD-sGvf0sWoRa_sNgdHKKEp-DS8oFQfD6naotODD-Fjn3wrzvSjuUigwXeu97nlrWI0nuuf55edgoIOpqJt7MOjgxQGdhZivr0tP_DswgFBZOkX98I2BIH_zyVgzfvO1B2xI0f0G13dJgMavb0XyMEWfNDAE1PgiooE3sP5_3F4tkT-DBmmVS-KeV_8kwhDkEBFXAUQu2b7m6Yj3ypzgeg_QI",
-    },
-    {
-      title: "Encontros Proibidos",
-      author: "Marcus Volkov",
-      category: "Contos Eróticos",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAUQAgWw1ED_wBza_os2-48hs98YDfqGRxroWsnw_sXq7k5R7oltoBV-auZ9m0-eJxcZ8EWMRo7SwYwTmtB1aJCq0uJP1fwYHFLIZFkBdPLXcBAFhoQoBcFNl25DhBwaUHxQx9CSGH5gFUMFPnSH-c5Aa4u66so0-Z36IXXP3qz1Ny3aUMci3qkKxD7M7K9FdJDSiC6O6-j8yZpOy9W1JwvBhu5FCfS32mAiJS8wbDw4Qcnc3ENxii2O_SKrQCcLlQcLYMBzoypS0Y",
-    },
-    {
-      title: "Versos da Carne",
-      author: "Isabella Noir",
-      category: "Poesia Erótica",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBgVtrm_eOHx_p2qd974xlkVGN1K7_isbTMlnq5NkFJFiupjuDVKDc8BCZH2kcnb_G533aE_i37g7z0GEROO7QNUdup3fzsS1G676zvnl4N3SCdIgz9rDiq2ffcvObWtyAZ_laJjB1dZyfvdKVWrhJwKL6l3ZakUICEeb-lP1-MocCpq1DqcaGJ-xB5JnWsNDbneY1XVODOME4EFFj-vEdUgzBUI0BHxz9ls1zV9DDjYW5p-Q8zgjxiFvabZGySiTjCSliarGdd0po",
-    },
-    {
-      title: "Pecados Noturnos",
-      author: "Marco Silva",
-      category: "Contos Eróticos",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuA9I7Efp6C163sDemrrL15lCaeVbZ9GtFuyM0bpamc3_LAwosgsEr-t5w3rkK8jGjlfQuOcWtUDpcv_x1g_PTt-sf-y9LRo0ByOWuQ0IcNI7Kc0Mjnw2UkJuDHOxtD2tQ4pXewgn3mfH4z9g8muXmee6dJZCPkWPadbmp0M1LjHiEV7YO0GcijP4suM-TOAN_oKbyETk9-ZzHE2Hp7eds_46eFHEY1TK67Lp-S7h_R7qDhruuhbJTmZBXclob1Ygh26aJpvuSSPen4",
-    }
-  ];
+  useEffect(() => {
+    fetch('/api/data')
+      .then(res => res.json())
+      .then(data => setData(data))
+      .catch(err => console.error("Failed to fetch data", err));
+  }, []);
 
-  const categories = ["Tudo", "Dark Romance", "Contos Eróticos", "Poesia Erótica"];
+  const allBooks = data?.books || [];
+  const categories = data?.categories || ["Tudo"];
+  const featuredBook = data?.featuredBook || null;
+  const hotListening = data?.hotListening || null;
+  const heroImage = data?.hero?.image || "";
 
   const filteredBooks = activeCategory === "Tudo" 
     ? allBooks 
-    : allBooks.filter(book => book.category === activeCategory);
+    : allBooks.filter((book: any) => book.category === activeCategory);
 
-  // Mock data for the featured book (this would come from the database/admin in the future)
-  const featuredBook = {
-    title: "Desejos Proibidos",
-    author: "Elena V. Blackwood",
-    description: "Em uma sociedade onde a repressão é a norma, Isabella descobre um clube secreto onde as fantasias mais obscuras ganham vida. Entre bailes de máscaras e encontros clandestinos, ela deve escolher entre a segurança de sua vida monótona e a perigosa atração de um estranho misterioso. Uma história de paixão avassaladora e segredos que podem destruir reputações.",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB76PMeCOrsbrAM0v-Wta9vEyEObtaGpw082bEHn_vXL6KvaMD-CRq9tFEtntkXvv06H18UmRmOnjX47ssetYVxw7uXyYYJmJxYlz99Hl1Oe5chXFmn3X-wEMFRlY7Cf95cFHPLz7sUAuP-JNG0TTuLDb8EnqjBrkj6-pU8bOinJ98gJ32QIIwv-tQMz7vQity831RrCmCcqRN1CdFFTgcElcqbZRLXGaJXktMrzDFrAg8EQlLv8jZOy7IL_bzv6GF87kT8spNV_oY",
-    category: "Romance Erótico"
+  // Duplicate books for infinite scroll effect if there are few books
+  const displayBooks = filteredBooks.length > 0 && filteredBooks.length < 5 
+    ? [...filteredBooks, ...filteredBooks, ...filteredBooks] 
+    : filteredBooks;
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isHovering, setIsHovering] = useState(false);
+  const scrollPosRef = useRef(0);
+  const [favorites, setFavorites] = useState<string[]>([]);
+
+  const toggleFavorite = (e: React.MouseEvent, title: string) => {
+    e.preventDefault(); // Prevent Link navigation
+    e.stopPropagation();
+    setFavorites(prev => 
+      prev.includes(title) 
+        ? prev.filter(t => t !== title) 
+        : [...prev, title]
+    );
   };
+
+  const scrollToCategorias = () => {
+    const element = document.getElementById('categorias');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+
+    let animationId: number;
+
+    const scroll = () => {
+      if (!isHovering) {
+        scrollPosRef.current += 0.5; // Adjust speed here
+        if (scrollPosRef.current >= scrollContainer.scrollWidth / 2) {
+          scrollPosRef.current = 0; // Reset for infinite effect
+        }
+        scrollContainer.scrollLeft = scrollPosRef.current;
+      } else {
+        // If hovering, keep tracking the current scroll position in case the user manually scrolled
+        scrollPosRef.current = scrollContainer.scrollLeft;
+      }
+      animationId = requestAnimationFrame(scroll);
+    };
+
+    animationId = requestAnimationFrame(scroll);
+
+    return () => cancelAnimationFrame(animationId);
+  }, [isHovering, displayBooks.length]);
+
+  if (!data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black text-white">
+        <div className="animate-pulse flex flex-col items-center gap-4">
+          <BookOpen className="w-8 h-8 text-[#4A0001]" />
+          <p className="text-[10px] tracking-[0.4em] uppercase text-white/40">Carregando ErotiXXXs...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -139,24 +166,26 @@ export default function LandingPage() {
         <section className="relative h-[calc(100vh-5rem)] w-full flex items-center overflow-hidden bg-black">
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 hero-gradient z-10"></div>
-            <Image
-              alt="Atmospheric high-contrast black and white photography"
-              className="w-full h-full object-cover grayscale opacity-50 contrast-125"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkWYPpnIfCStPaOT1UWjtnfzmtztjhgC-SF4SRMVjnEMoas11_Xbc_pQly0UEntHqXfq9Ew2XU4bP0AwpV-DlRZqGJNSisfIlDUr-o2dqV09zggAHoiOMwXHW8zfBbxHCLOnJ3NY8Jm9oRW_37Sg6gFbBTpEKhf5bfUZs0yX2YBNiinPfSAX-xv57zPENNrFBgUForSCcaUnhXc8-KjDhM_f75etfAIP9DV2TYQtPiKBccBH7a5DdZ6bpFx_pir0UbKPf8L1Dry5w"
-              fill
-              priority
-              referrerPolicy="no-referrer"
-            />
+            {heroImage && (
+              <Image
+                alt="Atmospheric high-contrast black and white photography"
+                className="w-full h-full object-cover grayscale opacity-50 contrast-125"
+                src={heroImage}
+                fill
+                priority
+                referrerPolicy="no-referrer"
+              />
+            )}
           </div>
         </section>
 
-        <section className="py-32 max-w-[1600px] mx-auto px-12">
+        <section id="categorias" className="py-32 max-w-[1600px] mx-auto px-12">
           <div className="flex flex-col items-center mb-24">
             <h3 className="serif-heading text-6xl font-light italic text-white/90 mb-16">
               Categorias
             </h3>
             <div className="flex flex-wrap gap-12 justify-center">
-              {categories.map((cat) => (
+              {categories.map((cat: string) => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
@@ -172,135 +201,213 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-20">
-            {filteredBooks.map((book, i) => (
-              <Link href="/book" key={i} className="group cursor-pointer space-y-10 block">
-                <div className="relative aspect-[3/4] overflow-hidden bg-zinc-950 thin-border transition-all duration-1000">
-                  <Image
-                    alt={`${book.title} cover`}
-                    className="w-full h-full object-cover opacity-70 group-hover:scale-110 group-hover:opacity-100 transition-all duration-[1.5s] grayscale-[0.3] group-hover:grayscale-0"
-                    src={book.img}
-                    fill
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-center justify-center gap-8 backdrop-blur-[4px]">
-                    <BookOpen className="text-white/60 font-thin w-6 h-6 hover:text-white transition-colors" />
-                    <Heart className="text-white/60 font-thin w-6 h-6 hover:text-[#4A0001] transition-colors" />
+          <div className="relative overflow-hidden w-full">
+            <div 
+              ref={scrollRef}
+              className="flex gap-16 lg:gap-20 overflow-x-hidden whitespace-nowrap py-4"
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+            >
+              {/* Render books twice for seamless infinite scrolling */}
+              {[...displayBooks, ...displayBooks].map((book: any, i: number) => (
+                <Link href="/book" key={`${book.title}-${i}`} className="group cursor-pointer space-y-10 block w-[280px] lg:w-[320px] flex-shrink-0">
+                  <div className="relative aspect-[3/4] overflow-hidden bg-zinc-950 thin-border transition-all duration-1000">
+                    <Image
+                      alt={`${book.title} cover`}
+                      className="w-full h-full object-cover opacity-70 group-hover:scale-110 group-hover:opacity-100 transition-all duration-[1.5s] grayscale-[0.3] group-hover:grayscale-0"
+                      src={book.img}
+                      fill
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-center justify-center gap-8 backdrop-blur-[4px]">
+                      <div className="text-white/60 font-thin w-6 h-6 hover:text-white transition-colors">
+                        <BookOpen />
+                      </div>
+                      <button 
+                        onClick={(e) => toggleFavorite(e, book.title)}
+                        className="text-white/60 font-thin w-6 h-6 hover:text-[#4A0001] transition-colors z-20"
+                      >
+                        <Heart className={favorites.includes(book.title) ? "fill-white text-white" : ""} />
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div className="space-y-3 text-center">
-                  <h4 className="serif-heading text-2xl font-light text-white/80 group-hover:text-[#4A0001] transition-colors duration-700">
-                    {book.title}
-                  </h4>
-                  <p className="text-white/20 text-[9px] tracking-[0.4em] uppercase font-extralight">
-                    {book.author}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        <section className="py-32 bg-[#050303] border-y border-white/5">
-          <div className="max-w-[1600px] mx-auto px-12">
-            <div className="flex flex-col items-center mb-24">
-              <h3 className="serif-heading text-6xl font-light italic text-white/90">
-                Destaque
-              </h3>
+                  <div className="space-y-3 text-center whitespace-normal">
+                    <h4 className="serif-heading text-2xl font-light text-white/80 group-hover:text-[#4A0001] transition-colors duration-700">
+                      {book.title}
+                    </h4>
+                    <p className="text-white/20 text-[9px] tracking-[0.4em] uppercase font-extralight">
+                      {book.author}
+                    </p>
+                  </div>
+                </Link>
+              ))}
             </div>
             
-            <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
-              <Link href="/book" className="w-full lg:w-[450px] flex-shrink-0 group relative perspective-1000 block">
-                <div className="aspect-[2/3] w-full rounded-sm overflow-hidden border border-white/10 relative z-10 transition-transform duration-700 ease-out group-hover:scale-[1.02] shadow-[0_0_40px_rgba(0,0,0,0.8)]">
-                  <Image
-                    alt={`${featuredBook.title} cover`}
-                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700 grayscale-[20%] group-hover:grayscale-0"
-                    src={featuredBook.img}
-                    fill
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
-                </div>
-                <div className="absolute inset-0 bg-[#4A0001]/20 blur-[100px] -z-10 opacity-30 group-hover:opacity-60 transition-opacity duration-1000"></div>
-              </Link>
-              
-              <div className="flex flex-col flex-1 max-w-2xl">
-                <div className="flex flex-col gap-4 mb-10">
-                  <h4 className="text-[#4A0001] font-medium text-[10px] uppercase tracking-[0.3em] flex items-center gap-3">
-                    <span className="w-6 h-[0.5px] bg-[#4A0001] block"></span> {featuredBook.category}
-                  </h4>
-                  <h2 className="serif-heading text-5xl md:text-6xl text-white leading-[1.1] tracking-tight italic">
-                    {featuredBook.title}
-                  </h2>
-                  <p className="text-lg text-white/40 font-light tracking-wide uppercase text-[11px] mt-2">
-                    {featuredBook.author}
-                  </p>
-                </div>
-                
-                <div className="mb-12">
-                  <p className="text-white/60 text-lg leading-relaxed font-light tracking-wide text-justify">
-                    <span className="text-5xl float-left mr-3 mt-[-8px] text-[#4A0001] serif-heading">
-                      {featuredBook.description.charAt(0)}
-                    </span>
-                    {featuredBook.description.slice(1)}
-                  </p>
-                </div>
-                
-                <div className="flex items-center gap-8">
-                  <Link href="/book" className="velvet-button px-12 py-5 text-[10px]">
-                    Ver Detalhes
-                  </Link>
-                  <Link href="/reader" className="text-white/30 hover:text-white text-[10px] tracking-[0.3em] font-light transition-all duration-500 border-b border-transparent hover:border-white/10 pb-1 uppercase flex items-center gap-2 group">
-                    Ler Agora
-                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
-              </div>
-            </div>
+            {/* Gradient overlays for smooth fading edges */}
+            <div className="absolute top-0 bottom-0 left-0 w-32 bg-gradient-to-r from-black to-transparent pointer-events-none z-10"></div>
+            <div className="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-black to-transparent pointer-events-none z-10"></div>
           </div>
         </section>
 
-        <section className="max-w-[1600px] mx-auto px-12 mb-64 mt-32">
-          <div className="relative border-y border-white/5 py-40 flex flex-col lg:flex-row items-center justify-between gap-24 overflow-hidden">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(74,0,1,0.05)_0%,transparent_70%)] -z-10"></div>
-            <div className="space-y-10 max-w-3xl">
-              <h3 className="serif-heading text-7xl font-light text-white/90">
-                ErotiXXXs{" "}
-                <span className="italic text-[#4A0001]">Prestige</span>
-              </h3>
-              <p className="text-white/30 text-xl font-extralight leading-relaxed tracking-wide">
-                O ápice da experiência literária. Assinatura exclusiva com
-                acesso a manuscritos originais, ilustrações em alta definição e
-                edições de luxo comentadas pelos autores em um ambiente
-                privativo.
-              </p>
-              <div className="flex flex-wrap gap-12 pt-6">
-                {["Offline", "Privacidade Total", "HDR Studio"].map(
-                  (feature, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-4 text-[9px] tracking-[0.4em] uppercase text-white/40"
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#4A0001]/40"></span>
-                      {feature}
-                    </div>
-                  ),
-                )}
+        {featuredBook && (
+          <section className="py-32 bg-[#050303] border-y border-white/5">
+            <div className="max-w-[1600px] mx-auto px-12">
+              <div className="flex flex-col items-center mb-24">
+                <h3 className="serif-heading text-6xl font-light italic text-white/90">
+                  Destaque
+                </h3>
+              </div>
+              
+              <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+                <Link href="/book" className="w-full lg:w-[450px] flex-shrink-0 group relative perspective-1000 block">
+                  <div className="aspect-[2/3] w-full rounded-sm overflow-hidden border border-white/10 relative z-10 transition-transform duration-700 ease-out group-hover:scale-[1.02] shadow-[0_0_40px_rgba(0,0,0,0.8)]">
+                    <Image
+                      alt={`${featuredBook.title} cover`}
+                      className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700 grayscale-[20%] group-hover:grayscale-0"
+                      src={featuredBook.img}
+                      fill
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                  </div>
+                  <div className="absolute inset-0 bg-[#4A0001]/20 blur-[100px] -z-10 opacity-30 group-hover:opacity-60 transition-opacity duration-1000"></div>
+                </Link>
+                
+                <div className="flex flex-col flex-1 max-w-2xl">
+                  <div className="flex flex-col gap-4 mb-10">
+                    <h4 className="text-[#4A0001] font-medium text-[10px] uppercase tracking-[0.3em] flex items-center gap-3">
+                      <span className="w-6 h-[0.5px] bg-[#4A0001] block"></span> {featuredBook.category}
+                    </h4>
+                    <h2 className="serif-heading text-5xl md:text-6xl text-white leading-[1.1] tracking-tight italic">
+                      {featuredBook.title}
+                    </h2>
+                    <p className="text-lg text-white/40 font-light tracking-wide uppercase text-[11px] mt-2">
+                      {featuredBook.author}
+                    </p>
+                  </div>
+                  
+                  <div className="mb-12">
+                    <p className="text-white/60 text-lg leading-relaxed font-light tracking-wide text-justify">
+                      <span className="text-5xl float-left mr-3 mt-[-8px] text-[#4A0001] serif-heading">
+                        {featuredBook.description?.charAt(0) || ""}
+                      </span>
+                      {featuredBook.description?.slice(1) || ""}
+                    </p>
+                  </div>
+                  
+                  <div className="flex items-center gap-8">
+                    <Link href="/book" className="velvet-button px-12 py-5 text-[10px]">
+                      Ver Detalhes
+                    </Link>
+                    <Link href="/reader" className="text-white/30 hover:text-white text-[10px] tracking-[0.3em] font-light transition-all duration-500 border-b border-transparent hover:border-white/10 pb-1 uppercase flex items-center gap-2 group">
+                      Ler Agora
+                      <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="flex-none flex flex-col items-center gap-8">
-              <button className="velvet-button px-20 py-7 text-sm">
-                R$ 29,90{" "}
-                <span className="text-[10px] font-light opacity-40 ml-3 tracking-[0.3em]">
-                  / MÊS
-                </span>
-              </button>
-              <p className="text-[8px] tracking-[0.5em] text-white/10 uppercase">
-                Assinatura de renovação automática
-              </p>
-            </div>
+          </section>
+        )}
+
+        <section className="py-32 max-w-[1600px] mx-auto px-12">
+          <div className="flex flex-col items-center mb-24">
+            <h3 className="serif-heading text-6xl font-light italic text-white/90 mb-4">
+              Favoritos
+            </h3>
           </div>
+
+          {favorites.length === 0 ? (
+            <div className="flex flex-col items-center justify-center text-center space-y-10 py-16 border border-white/5 bg-white/[0.02]">
+              <Heart className="w-12 h-12 text-white/10 font-thin" />
+              <p className="text-white/40 text-[11px] font-light tracking-[0.3em] uppercase max-w-md leading-relaxed">
+                Marque seus livros favoritos e crie sua própria coleção
+              </p>
+              <button 
+                onClick={scrollToCategorias}
+                className="velvet-button px-12 py-5 text-[10px]"
+              >
+                Quero criar
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-20">
+              {allBooks.filter((book: any) => favorites.includes(book.title)).map((book: any) => (
+                <Link href="/book" key={`fav-${book.title}`} className="group cursor-pointer space-y-10 block">
+                  <div className="relative aspect-[3/4] overflow-hidden bg-zinc-950 thin-border transition-all duration-1000">
+                    <Image
+                      alt={`${book.title} cover`}
+                      className="w-full h-full object-cover opacity-70 group-hover:scale-110 group-hover:opacity-100 transition-all duration-[1.5s] grayscale-[0.3] group-hover:grayscale-0"
+                      src={book.img}
+                      fill
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-center justify-center gap-8 backdrop-blur-[4px]">
+                      <div className="text-white/60 font-thin w-6 h-6 hover:text-white transition-colors">
+                        <BookOpen />
+                      </div>
+                      <button 
+                        onClick={(e) => toggleFavorite(e, book.title)}
+                        className="text-white/60 font-thin w-6 h-6 hover:text-[#4A0001] transition-colors z-20"
+                      >
+                        <Heart className="fill-white text-white" />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="space-y-3 text-center">
+                    <h4 className="serif-heading text-2xl font-light text-white/80 group-hover:text-[#4A0001] transition-colors duration-700">
+                      {book.title}
+                    </h4>
+                    <p className="text-white/20 text-[9px] tracking-[0.4em] uppercase font-extralight">
+                      {book.author}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </section>
+
+        {hotListening && (
+          <section className="max-w-[1600px] mx-auto px-12 mb-64 mt-32">
+            <div className="relative border-y border-white/5 py-40 flex flex-col lg:flex-row items-center justify-between gap-24 overflow-hidden">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(74,0,1,0.05)_0%,transparent_70%)] -z-10"></div>
+              <div className="space-y-10 max-w-3xl">
+                <h3 className="serif-heading text-7xl font-light text-white/90">
+                  ErotiXXXs{" "}
+                  <span className="italic text-[#4A0001]">{hotListening.title.replace("ErotiXXXs ", "")}</span>
+                </h3>
+                <p className="text-white/30 text-xl font-extralight leading-relaxed tracking-wide">
+                  {hotListening.description}
+                </p>
+                <div className="flex flex-wrap gap-12 pt-6">
+                  {hotListening.features.map(
+                    (feature: string, i: number) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-4 text-[9px] tracking-[0.4em] uppercase text-white/40"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#4A0001]/40"></span>
+                        {feature}
+                      </div>
+                    ),
+                  )}
+                </div>
+              </div>
+              <div className="flex-none flex flex-col items-center gap-8">
+                <button className="velvet-button px-20 py-7 text-sm">
+                  {hotListening.price}{" "}
+                  <span className="text-[10px] font-light opacity-40 ml-3 tracking-[0.3em]">
+                    {hotListening.unit}
+                  </span>
+                </button>
+                <p className="text-[8px] tracking-[0.5em] text-white/10 uppercase">
+                  {hotListening.footerText}
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
       </main>
 
       <footer className="bg-[#050303] pt-40 pb-20 border-t border-white/5">
