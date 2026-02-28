@@ -29,7 +29,17 @@ export default function LandingPage() {
   const categories = data?.categories || ["Tudo"];
   const featuredBook = data?.featuredBook || null;
   const hotListening = data?.hotListening || null;
-  const heroImage = data?.hero?.image || "";
+  const heroImages = data?.hero?.images || (data?.hero?.image ? [data.hero.image] : []);
+
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+
+  useEffect(() => {
+    if (heroImages.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentHeroIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
 
   const filteredBooks = activeCategory === "Tudo" 
     ? allBooks 
@@ -166,16 +176,17 @@ export default function LandingPage() {
         <section className="relative h-[calc(100vh-5rem)] w-full flex items-center overflow-hidden bg-black">
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 hero-gradient z-10"></div>
-            {heroImage && (
+            {heroImages.filter((img: string) => img).map((img: string, index: number) => (
               <Image
-                alt="Atmospheric high-contrast black and white photography"
-                className="w-full h-full object-cover grayscale opacity-50 contrast-125"
-                src={heroImage}
+                key={index}
+                alt={`Atmospheric high-contrast black and white photography ${index + 1}`}
+                className={`w-full h-full object-cover grayscale contrast-125 absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${index === currentHeroIndex ? 'opacity-50' : 'opacity-0'}`}
+                src={img}
                 fill
-                priority
+                priority={index === 0}
                 referrerPolicy="no-referrer"
               />
-            )}
+            ))}
           </div>
         </section>
 

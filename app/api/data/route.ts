@@ -3,7 +3,10 @@ import { NextResponse } from "next/server";
 // In-memory store (persists across API calls in development, but resets on server restart)
 let store = {
   hero: {
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAkWYPpnIfCStPaOT1UWjtnfzmtztjhgC-SF4SRMVjnEMoas11_Xbc_pQly0UEntHqXfq9Ew2XU4bP0AwpV-DlRZqGJNSisfIlDUr-o2dqV09zggAHoiOMwXHW8zfBbxHCLOnJ3NY8Jm9oRW_37Sg6gFbBTpEKhf5bfUZs0yX2YBNiinPfSAX-xv57zPENNrFBgUForSCcaUnhXc8-KjDhM_f75etfAIP9DV2TYQtPiKBccBH7a5DdZ6bpFx_pir0UbKPf8L1Dry5w"
+    images: [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuAkWYPpnIfCStPaOT1UWjtnfzmtztjhgC-SF4SRMVjnEMoas11_Xbc_pQly0UEntHqXfq9Ew2XU4bP0AwpV-DlRZqGJNSisfIlDUr-o2dqV09zggAHoiOMwXHW8zfBbxHCLOnJ3NY8Jm9oRW_37Sg6gFbBTpEKhf5bfUZs0yX2YBNiinPfSAX-xv57zPENNrFBgUForSCcaUnhXc8-KjDhM_f75etfAIP9DV2TYQtPiKBccBH7a5DdZ6bpFx_pir0UbKPf8L1Dry5w",
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuBNtWZo2PqmSHKPyX9tqNhYsYjs3qznORXtMg0vcBy4kEcl3LUdipPN9rHLGE2S4fkPYNyFKjSs_t5G6RfCouiM3gwdTpBiu68LL0QQ2UPimvCd8X0qaW4V8Lae6Nc-k8c1XWc_z3OmWaZnJtPhH-EbN3AO1MVJPuekpkND9GoHABWRrOLZcDaoZqgnUuKTz2MOGC5FGQH3OANR9DEsw6h541_LrQWYxz0m-N0OG-LdetVBpXocgxRjjfFwr-68yRohqznDJkFU6t0"
+    ]
   },
   categories: ["Tudo", "Dark Romance", "Contos Eróticos", "Poesia Erótica"],
   books: [
